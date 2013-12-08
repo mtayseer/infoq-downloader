@@ -1,0 +1,1 @@
+pyinstaller infoq_downloader.py --onefile --upx-dir="F:\tayseer\tools\upx"
