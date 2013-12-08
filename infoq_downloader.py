@@ -1,6 +1,8 @@
-# TODO: To complete download of the file, use HTTP header 'Range': 'bytes=20-'
 from __future__ import division
-import os, sys, re, requests, lxml.html
+
+# For some reason, the generated Windows EXE cannot find cssselect, although it's added to the hidden imports
+# Importing cssselect explicitly solves this problem
+import os, sys, re, requests, cssselect, lxml.html
 
 if len(sys.argv) != 2:
     print '''Usage: {0} <url>'''.format(os.path.basename(__file__))
@@ -20,7 +22,7 @@ html_doc.cssselect('video > source')[0].attrib['src'] = video_file
 # Clean the page
 for elt in html_doc.cssselect('#footer, #header, #topInfo, .share_this, .random_links, .vendor_vs_popular, .bottomContent, ' + 
                               '#id_300x250_banner_top, .presentation_type, #conference, #imgPreload, #text_height_fix_box, ' +
-                              '.download_presentation, .recorded, script[async]'):
+                              '.download_presentation, .recorded, script[async], script[src*=addthis]'):
     elt.getparent().remove(elt)
 html_doc.cssselect('#wrapper')[0].attrib['style'] = 'background: none'
 content = lxml.html.tostring(html_doc)
@@ -34,6 +36,7 @@ with open('index.html', 'w') as f:
     f.write(content)
     f.flush()
 
+# Download slides
 for i, slide in enumerate(slides):
     if not os.path.exists('slides'):
         os.mkdir('slides')
@@ -42,12 +45,16 @@ for i, slide in enumerate(slides):
         continue
     print '\rDownloading slide {0} of {1}'.format(i+1, len(slides)),
     url = 'http://www.infoq.com{0}'.format(slide)
-    open('slides/{0}'.format(filename), 'wb').write(requests.get(url).content)
+    slide_content = requests.get(url).content
+    with open('slides/{0}'.format(filename), 'wb') as f:
+        f.write(slide_content)
+        f.flush()
 
 print
 
 # If the video file is already downloaded successfully, don't do anything else
 if os.path.exists(video_file):
+    print 'Video file already exists'
     sys.exit()
 
 # Download the video file. stream=True here is important to allow me to iterate over content
