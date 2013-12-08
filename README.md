@@ -5,5 +5,9 @@
 ## Usage
 `python infoq_downloader.py http://www.infoq.com/presentations/github-evolution`
 
+## Features
+1. Console app
+2. Supports download resuming
+
 ## License
 Do whatever you want with it

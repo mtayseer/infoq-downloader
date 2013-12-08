@@ -40,7 +40,7 @@ for i, slide in enumerate(slides):
     filename = os.path.split(slide)[1]
     if os.path.exists('slides/{0}'.format(filename)):
         continue
-    print '\rDownloading slide {0} of {1}'.format(i, len(slides)),
+    print '\rDownloading slide {0} of {1}'.format(i+1, len(slides)),
     url = 'http://www.infoq.com{0}'.format(slide)
     open('slides/{0}'.format(filename), 'wb').write(requests.get(url).content)
 
