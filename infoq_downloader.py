@@ -2,13 +2,14 @@ from __future__ import division
 
 # For some reason, the generated Windows EXE cannot find cssselect, although it's added to the hidden imports
 # Importing cssselect explicitly solves this problem
-import os, sys, re, requests, cssselect, lxml.html
+import os, sys, re, requests, cssselect, lxml.html, shutil
 
 if len(sys.argv) != 2:
     print '''Usage: {0} <url>'''.format(os.path.basename(__file__))
     sys.exit(1)
 
 url = sys.argv[1]
+topic = url.rsplit('/',1)[1]
 
 # Tell infoq that I'm an iPad, so it gives me simpler HTML to parse & mp4 file to download
 user_agent = "Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10')"
@@ -76,4 +77,14 @@ with open(downloaded_file, 'ab') as f:
         print '\rDownloading video {0}%'.format(round(f.tell() / content_length, 2) * 100),
 
 os.rename(downloaded_file, video_file)
-    
+
+# move all files to a directory
+if not os.path.exists(topic):
+    os.makedirs(topic)
+
+shutil.move("./" + video_file, topic)
+shutil.move("./" + "index.html", topic)
+shutil.move("./" + "slides", topic)
+
+
+print 'Done'
