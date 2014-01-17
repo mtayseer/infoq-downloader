@@ -1,15 +1,24 @@
 # TODO: To complete download of the file, use HTTP header 'Range': 'bytes=20-'
 from __future__ import division
-import os, sys, re, requests, lxml.html
+import os
+import sys
+import re
+import argparse
+import requests
+import lxml.html
 
-if len(sys.argv) != 2:
-    print '''Usage: {0} <url>'''.format(os.path.basename(__file__))
-    sys.exit(1)
 
-url = sys.argv[1]
+parser = argparse.ArgumentParser(description='Download InfoQ presentations.')
+parser.add_argument('url', metavar='URL', type=str,
+                    help='URL of the presentation to download')
+
+args = parser.parse_args()
+
+url = args.url
 
 # Tell infoq that I'm an iPad, so it gives me simpler HTML to parse & mp4 file to download
-user_agent = "Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10')"
+user_agent = "Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 "\
+             "(KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10')"
 print 'Downloading HTML file'
 content = requests.get(url, headers={'User-Agent': user_agent}).content
 html_doc = lxml.html.fromstring(content)
@@ -18,8 +27,9 @@ video_file = os.path.split(video_url)[1]
 html_doc.cssselect('video > source')[0].attrib['src'] = video_file
 
 # Clean the page
-for elt in html_doc.cssselect('#footer, #header, #topInfo, .share_this, .random_links, .vendor_vs_popular, .bottomContent, ' + 
-                              '#id_300x250_banner_top, .presentation_type, #conference, #imgPreload, #text_height_fix_box, ' +
+for elt in html_doc.cssselect('#footer, #header, #topInfo, .share_this, .random_links,' +
+                              ' .vendor_vs_popular, .bottomContent, #id_300x250_banner_top,' +
+                              ' .presentation_type, #conference, #imgPreload, #text_height_fix_box, ' +
                               '.download_presentation, .recorded, script[async]'):
     elt.getparent().remove(elt)
 html_doc.cssselect('#wrapper')[0].attrib['style'] = 'background: none'
@@ -69,4 +79,3 @@ with open(downloaded_file, 'ab') as f:
         print '\rDownloading video {0}%'.format(round(f.tell() / content_length, 2) * 100),
 
 os.rename(downloaded_file, video_file)
-    
