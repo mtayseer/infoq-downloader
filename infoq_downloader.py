@@ -95,4 +95,4 @@ with open(downloaded_file, 'ab') as f:
         # The comma at the end of line is important, to stop the 'print' command from printing an additional new line
         print '\rDownloading video {0}%'.format(round(f.tell() / content_length, 2) * 100),
 
-os.rename(downloaded_file, video_file)
+os.rename(downloaded_file, '{}/{}/{}'.format(download_directory, title,video_file))
