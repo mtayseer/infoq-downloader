@@ -37,8 +37,8 @@ video_file = os.path.split(video_url)[1]
 html_doc.cssselect('video > source')[0].attrib['src'] = video_file
 
 # Clean the page
-for elt in html_doc.cssselect():
-    elt.getparent(', '.join(e for e in cleanup_elements)).remove(elt)
+for elt in html_doc.cssselect(', '.join(e for e in cleanup_elements)):
+    elt.getparent().remove(elt)
 html_doc.cssselect('#wrapper')[0].attrib['style'] = 'background: none'
 content = lxml.html.tostring(html_doc)
 
@@ -72,7 +72,7 @@ for i, slide in enumerate(slides):
         continue
     print '\rDownloading slide {0} of {1}'.format(i, len(slides)),
     url = 'http://www.infoq.com{0}'.format(slide)
-    with open(os.path.join(presentation_directory, 'slides', '{0}'.format(filename), 'wb')) as f:
+    with open(os.path.join(presentation_directory, 'slides', '{0}'.format(filename)), 'wb') as f:
         f.write(requests.get(url).content)
 
 print
@@ -82,7 +82,8 @@ if os.path.exists(video_file):
     sys.exit()
 
 # Download the video file. stream=True here is important to allow me to iterate over content
-downloaded_file = '{}/{}/{}.part'.format(download_directory, title, video_file)
+downloaded_file = os.path.join(presentation_directory, '{}.part'.format(video_file))
+
 if os.path.exists(downloaded_file):
     bytes_downloaded = os.stat(downloaded_file).st_size
 else:
@@ -99,4 +100,5 @@ with open(downloaded_file, 'ab') as f:
         # The comma at the end of line is important, to stop the 'print' command from printing an additional new line
         print '\rDownloading video {0}%'.format(round(f.tell() / content_length, 2) * 100),
 
-os.rename(downloaded_file, '{}/{}/{}'.format(download_directory, title, video_file))
+final_video_name = os.path.join(presentation_directory, video_file)
+os.rename(downloaded_file, final_video_name)
