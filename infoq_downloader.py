@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from __future__ import division
 
 # For some reason, the generated Windows EXE cannot find cssselect, although it's added to the hidden imports
@@ -76,4 +78,3 @@ with open(downloaded_file, 'ab') as f:
         print '\rDownloading video {0}%'.format(round(f.tell() / content_length, 2) * 100),
 
 os.rename(downloaded_file, video_file)
-    
