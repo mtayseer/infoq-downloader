@@ -8,6 +8,7 @@ import argparse
 import requests
 import cssselect
 import lxml.html
+import unicodedata
 
 
 # Some settings
@@ -54,7 +55,8 @@ if not os.path.exists(download_directory):
     os.makedirs(download_directory)
 
 # presentation folder path
-presentation_directory = os.path.join(download_directory, title)
+normalized_title = unicodedata.normalize('NFKD', title).encode('ASCII', 'ignore')
+presentation_directory = os.path.join(download_directory, normalized_title)
 # Create a folder with the name of the presentation
 if not os.path.exists(presentation_directory):
     os.makedirs(presentation_directory)
