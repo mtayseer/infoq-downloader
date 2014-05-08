@@ -55,7 +55,10 @@ if not os.path.exists(download_directory):
     os.makedirs(download_directory)
 
 # presentation folder path
-normalized_title = unicodedata.normalize('NFKD', title).encode('ASCII', 'ignore')
+if isinstance(title, unicode):
+    normalized_title = unicodedata.normalize('NFKD', title).encode('ASCII', 'ignore')
+else:
+    normalized_title = title
 presentation_directory = os.path.join(download_directory, normalized_title)
 # Create a folder with the name of the presentation
 if not os.path.exists(presentation_directory):
