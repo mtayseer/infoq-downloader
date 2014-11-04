@@ -5,7 +5,7 @@
 ## Installation
 On Windows, just download [this file](dist/infoq_downloader.exe?raw=true)
 
-On Linux, run the following
+On Linux, ensure you have the development headers neeeded by lxml (`sudo apt-get install libxml2-dev libxslt1-dev` on Ubuntu) and run the following:
 
 ```sh
 git clone https://github.com/mtayseer/infoq-downloader.git
