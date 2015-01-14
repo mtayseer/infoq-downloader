@@ -71,7 +71,13 @@ if isinstance(title, text_type):
     normalized_title = unicodedata.normalize('NFKD', title)
 else:
     normalized_title = text_type(title)
+
+# Remove invalid characters for windows folder names
+normalized_title = normalized_title.replace('\\', '').replace('/', '').replace(':', '').replace('*', '').replace('?', '').replace('\"', '').replace('<', '').replace('>', '').replace('|', '')
+
 presentation_directory = os.path.join(download_directory, normalized_title)
+
+
 # Create a folder with the name of the presentation
 if not os.path.exists(presentation_directory):
     os.makedirs(presentation_directory)
