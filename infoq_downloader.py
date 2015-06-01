@@ -59,7 +59,7 @@ html_doc.cssselect('#wrapper')[0].attrib['style'] = 'background: none'
 content = lxml.html.tostring(html_doc).decode('utf-8')
 
 # Make slides links point to local copies
-slides_re = re.compile(r"'(/resource/presentations/[^']*?/en/slides/[^']*?)'")
+slides_re = re.compile(r"'[^']*?(/resource/presentations/[^']*?/en/slides/[^']*?)'")
 slides = slides_re.findall(content)
 
 # Create a directory for the downloaded presentation if it doesn't exist
@@ -80,8 +80,8 @@ if not os.path.exists(presentation_directory):
 if not os.path.exists('{}/slides'.format(presentation_directory)):
     os.makedirs('{}/slides'.format(presentation_directory))
 
-#Write content
-content = re.sub(r"/resource/presentations/[^']*?/en/", '', content)
+# Write content
+content = re.sub(r"'[^']*?/resource/presentations/[^']*?/en/", '\'', content)
 with open('{}/index.html'.format(presentation_directory), 'w') as f:
     f.write(content)
     f.flush()
