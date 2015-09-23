@@ -77,12 +77,12 @@ if not os.path.exists(presentation_directory):
     os.makedirs(presentation_directory)
 
 # Create a slides folder inside the presentation folder
-if not os.path.exists('{}/slides'.format(presentation_directory)):
-    os.makedirs('{}/slides'.format(presentation_directory))
+if not os.path.exists(u'{}/slides'.format(presentation_directory)):
+    os.makedirs(u'{}/slides'.format(presentation_directory))
 
 #Write content
 content = re.sub(r"/resource/presentations/[^']*?/en/", '', content)
-with open('{}/index.html'.format(presentation_directory), 'w') as f:
+with open(u'{}/index.html'.format(presentation_directory), 'w') as f:
     f.write(content)
     f.flush()
 
