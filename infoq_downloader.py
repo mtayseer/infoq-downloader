@@ -119,6 +119,9 @@ if os.path.exists(downloaded_file):
 else:
     bytes_downloaded = 0
 
+if not video_url.startswith("http:"):
+    video_url = "http:" + video_url
+
 r = requests.get(video_url, stream=True,
                  headers={'Range': 'bytes={0}-'.format(bytes_downloaded)})
 content_length = int(r.headers['content-length']) + bytes_downloaded
